@@ -198,24 +198,25 @@ Keluaran: ALE(v) untuk v = 1, …, 5
 | 19 | Dokumentasi teknis & verifikasi kode vs draf makalah | `BRIEFING_PENELITIAN_ALE.md` |
 | 20 | Verifikasi pseudocode algoritma ALE (100% sesuai kode) | — |
 
+| 21 | **StandardScaler pada Ridge Regression** via `Pipeline` | `ale_core.py` Baris 158 |
+
 ### ⚠️ Belum Dikerjakan / Perlu Perhatian
 
 | No | Pekerjaan | Prioritas | Keterangan |
 |:---:|:---|:---:|:---|
-| 1 | Normalisasi fitur untuk Ridge Regression | 🟡 Sedang | Tanpa `StandardScaler`, Ridge menghasilkan $R^2 = -0.088$. Sudah ada disclaimer di kode (Baris 72–79). Perlu disebutkan sebagai keterbatasan di subbab Metode makalah. |
-| 2 | Interval kepercayaan / bootstrap ALE | 🟢 Opsional | Implementasi ALE saat ini tidak menyertakan bootstrap CI — perlu disebutkan sebagai batasan penelitian. |
-| 3 | Cross-validation / hyperparameter tuning | 🟢 Opsional | Tidak ada CV saat ini. Sudah ada disclaimer di kode (Baris 61–68). Perlu disebutkan secara eksplisit di subbab Metode. |
+| 1 | Interval kepercayaan / bootstrap ALE | 🟢 Opsional | Implementasi ALE saat ini tidak menyertakan bootstrap CI — dapat disebutkan sebagai batasan penelitian. |
+| 2 | Cross-validation / hyperparameter tuning | 🟢 Opsional | Tidak ada CV saat ini; pembagian acak tunggal 80:20 (seed 42) dilaporkan secara konsisten di subbab Metode. |
 
 ---
 
 ## 8. Hasil yang Sudah Diperoleh
 
 ### Kinerja Model pada Data Uji
-| Peringkat | Model | RMSE | $R^2$ |
-|:---:|:---|:---:|:---:|
-| 1 | **Random Forest** | **1.3012** | **0.0487** |
-| 2 | Gradient Boosting | 1.3261 | 0.0118 |
-| 3 | Ridge Regression | 1.3913 | -0.0878 |
+| Peringkat | Model | RMSE | $R^2$ | Konfigurasi |
+|:---:|:---|:---:|:---:|:---|
+| 1 | **Random Forest** | **1.3012** | **0.0487** | `n_estimators=300, random_state=42` |
+| 2 | Gradient Boosting | 1.3261 | 0.0118 | `n_estimators=100, lr=0.05` |
+| 3 | Ridge Regression | 1.3926 | -0.0897 | `alpha=1.0` + `StandardScaler` |
 
 ### Top 5 Gini Importance (Random Forest, seluruh 31 fitur)
 | Peringkat | Fitur | Gini Importance (%) |
@@ -248,11 +249,11 @@ Keluaran: ALE(v) untuk v = 1, …, 5
 **Konfigurasi fitur yang dipakai:** Seluruh 31 variabel independen diikutsertakan — termasuk `anxious_stressed` dan `nervous_anxious` — karena keduanya merupakan bagian sah dari data swalaporan dan berkontribusi terhadap prediksi `mood_disorder`.
 
 ### Angka Resmi: Kinerja Model
-| Peringkat | Model | RMSE | $R^2$ |
-|:---:|:---|:---:|:---:|
-| **1** | **Random Forest** | **1.3012** | **0.0487** |
-| 2 | Gradient Boosting | 1.3261 | 0.0118 |
-| 3 | Ridge Regression | 1.3913 | -0.0878 |
+| Peringkat | Model | RMSE | $R^2$ | Konfigurasi |
+|:---:|:---|:---:|:---:|:---|
+| **1** | **Random Forest** | **1.3012** | **0.0487** | `n_estimators=300, random_state=42` |
+| 2 | Gradient Boosting | 1.3261 | 0.0118 | `n_estimators=100, lr=0.05` |
+| 3 | Ridge Regression | 1.3926 | -0.0897 | `alpha=1.0` + `StandardScaler` (Pipeline) |
 
 ### Angka Resmi: Gini Importance (Top 5)
 | Peringkat | Fitur | Gini (%) |

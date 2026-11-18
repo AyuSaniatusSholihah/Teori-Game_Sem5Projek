@@ -12,6 +12,8 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import Ridge
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
 from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 
@@ -146,21 +148,18 @@ def build_models() -> dict:
     Mendefinisikan tiga model regresi beserta hiperparameternya.
 
     Hiperparameter eksplisit:
-    - Ridge            : alpha=1.0
+    - Ridge Regression : alpha=1.0, dibungkus StandardScaler via Pipeline
+                         untuk menormalisasi disparitas skala fitur survei
+                         secara tepat tanpa kebocoran data (zero leakage).
     - Gradient Boosting: n_estimators=100, learning_rate=0.05
     - Random Forest    : n_estimators=300
-
-    Catatan Ridge: Tidak ada StandardScaler di pipeline ini.
-    Karena skala fitur sangat heterogen (mis. social_media_purpose
-    0–86 vs fitur biner 0–1), Ridge dapat menghasilkan R² negatif.
-    Ini merupakan keterbatasan yang perlu disebutkan di makalah.
 
     Kembalikan
     ----------
     dict berisi {nama_model: objek_model}
     """
     return {
-        'Ridge Regression' : Ridge(alpha=1.0),
+        'Ridge Regression' : make_pipeline(StandardScaler(), Ridge(alpha=1.0)),
         'Gradient Boosting': GradientBoostingRegressor(
                                 n_estimators=100,
                                 learning_rate=0.05,
