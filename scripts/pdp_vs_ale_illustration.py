@@ -170,9 +170,12 @@ fig.text(0.98, 0.01,
          ha='right', va='bottom', fontsize=7,
          color='#555555', style='italic')
 
-# Simpan ke folder yang sama dengan script ini
-script_dir = os.path.dirname(os.path.abspath(__file__))
-out_path   = os.path.join(script_dir, 'pdp_vs_ale_illustration.png')
+# Simpan ke folder output/
+script_dir   = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(script_dir, '..'))
+out_dir      = os.path.join(project_root, 'output')
+os.makedirs(out_dir, exist_ok=True)
+out_path     = os.path.join(out_dir, 'pdp_vs_ale_illustration.png')
 plt.savefig(out_path, bbox_inches='tight')
 plt.close()
 print(f"Gambar berhasil disimpan: {out_path}")

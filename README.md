@@ -50,20 +50,35 @@ Model prediksi dilatih untuk memprediksi variabel target `mood_disorder` (skala 
 
 ## 3. Struktur Proyek
 
+Repositori ini telah dimodularisasi ke dalam direktori khusus berstandar repositori penelitian:
+
 ```
-sc/sc/
-├── ALE.py                        ← Script utama (runner): orkestrasi seluruh pipeline
-├── ale_core.py                   ← Modul inti komputasi: data, model ML, Gini, dan ALE
-├── ale_visualize.py              ← Modul visualisasi: fungsi plot & simpan gambar grafik
-├── pdp_vs_ale_illustration.py    ← Script ilustrasi konseptual PDP vs ALE
-├── cleaned_data-2.csv            ← Dataset (513 responden, 32 kolom)
+Teori-Game_Sem5Projek/
+├── data/
+│   └── cleaned_data-2.csv            ← Dataset swalaporan (513 responden, 32 kolom)
 │
-├── ale_curves.png                ← [OUTPUT] Grafik kurva ALE 4 fitur kunci
-├── feature_importance.png        ← [OUTPUT] Grafik Gini Importance Top 10
-├── pred_vs_actual.png            ← [OUTPUT] Grafik prediksi vs aktual (RF)
-├── residual_distribution.png     ← [OUTPUT] Distribusi residual (RF)
-├── pdp_vs_ale_illustration.png   ← [OUTPUT] Ilustrasi konseptual PDP vs ALE
-└── BRIEFING_PENELITIAN_ALE.md    ← Dokumentasi teknis algoritma & verifikasi
+├── src/
+│   ├── __init__.py                   ← Package init
+│   ├── ale_core.py                   ← Modul komputasi: data, model ML, Gini, dan rumus ALE
+│   └── ale_visualize.py              ← Modul visualisasi: pembuatan grafik format IEEE 300 DPI
+│
+├── output/
+│   ├── ale_curves.png                ← [OUTPUT] Kurva ALE 1D 4 fitur kunci (2×2 grid)
+│   ├── feature_importance.png        ← [OUTPUT] Bar chart Gini Importance Top 10
+│   ├── pred_vs_actual.png            ← [OUTPUT] Scatter plot prediksi vs aktual (RF)
+│   ├── residual_distribution.png     ← [OUTPUT] Histogram distribusi residual (RF)
+│   └── pdp_vs_ale_illustration.png   ← [OUTPUT] Ilustrasi konseptual PDP vs ALE
+│
+├── docs/
+│   └── BRIEFING_PENELITIAN_ALE.md    ← Dokumentasi teknis mendalam & verifikasi makalah
+│
+├── scripts/
+│   └── pdp_vs_ale_illustration.py    ← Script mandiri pembangun ilustrasi PDP vs ALE
+│
+├── main.py                           ← Titik masuk utama (runner) pipeline penelitian
+├── ALE.py                            ← Alias runner (bisa dijalankan via python ALE.py)
+├── README.md                         ← Dokumentasi utama repositori
+└── .gitignore                        ← Konfigurasi ignore file cache/temporary
 ```
 
 ---
@@ -83,31 +98,37 @@ sc/sc/
 pip install pandas numpy scikit-learn matplotlib
 ```
 
-> **Catatan:** Tidak diperlukan library ALE eksternal (PyALE, alibi, DALEX, dsb.). Algoritma ALE diimplementasikan secara mandiri di dalam `ALE.py`.
+> **Catatan:** Tidak diperlukan library ALE eksternal (PyALE, alibi, DALEX, dsb.). Algoritma ALE diimplementasikan secara mandiri di dalam `src/ale_core.py`.
 
 ---
 
 ## 5. Cara Menjalankan
 
-### Menjalankan Pipeline Utama (ALE.py)
+### Menjalankan Pipeline Utama
+Jalankan salah satu perintah berikut dari folder proyek:
 ```powershell
-cd "D:\Nia\Kuliah\SEM 5\teori game\sc\sc"
+python main.py
+# atau
 python ALE.py
 ```
-Atau tekan tombol **▶ Run** di VS Code saat file `ALE.py` terbuka.
+Atau tekan tombol **▶ Run** di VS Code saat file `main.py` atau `ALE.py` terbuka.
 
 **Output yang dihasilkan:**
 - Statistik deskriptif 5 variabel kunci di terminal.
 - Tabel kinerja model (RMSE dan $R^2$) di terminal.
 - Tabel Top 5 Gini Importance di terminal.
 - Tabel nilai ALE skala 1–5 + narasi efek untuk 4 fitur di terminal.
-- `ale_curves.png` — grafik kurva ALE 2×2.
-- `feature_importance.png` — bar chart Gini Importance Top 10.
-- `pred_vs_actual.png` — scatter plot prediksi vs nilai aktual (RF).
-- `residual_distribution.png` — histogram distribusi residual (RF).
+- Seluruh file grafik otomatis tersimpan di folder `output/`:
+  - `output/ale_curves.png`
+  - `output/feature_importance.png`
+  - `output/pred_vs_actual.png`
+  - `output/residual_distribution.png`
 
 ### Menjalankan Ilustrasi Konseptual PDP vs ALE
 ```powershell
+python scripts/pdp_vs_ale_illustration.py
+```
+**Output:** File `output/pdp_vs_ale_illustration.png`.
 python pdp_vs_ale_illustration.py
 ```
 **Output:** File `pdp_vs_ale_illustration.png` — gambar penjelasan perbedaan metode PDP (yang tidak realistis untuk data berkorelasi) dan ALE (yang hanya menggeser observasi lokal dalam bin).
